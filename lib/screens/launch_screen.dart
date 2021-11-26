@@ -7,6 +7,9 @@ import '../globals.dart' as global;
 import '../providers/machines.dart';
 import '../providers/session.dart';
 import '../providers/users.dart';
+import '../providers/staff.dart';
+
+//import '../providers/ordservice.dart';
 import '../screens/logon_screen.dart';
 
 class LaunchScreen extends StatefulWidget {
@@ -27,11 +30,14 @@ class _LaunchScreenState extends State<LaunchScreen> {
   }
 
   void _appInitialization() async {
-    await Provider.of<Session>(context, listen: false).loadSavedSession();
+    final lastSession = Provider.of<Session>(context, listen: false);
+    await lastSession.loadSavedSession();
+    await lastSession.loadSavedFilter();
+
     await Provider.of<Machines>(context, listen: false).loadOrdMachines();
     await Provider.of<Users>(context, listen: false).loadUsers();
+    await Provider.of<Staff>(context, listen: false).loadStaff();
 
-    print('in launchScreen  ${global.machineId} ${global.userId}');
     global.starting = false;
     //Navigator.of(context).popUntil(ModalRoute.withName('/'));
     // Navigator.of(context)

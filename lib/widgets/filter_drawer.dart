@@ -1,7 +1,13 @@
-import 'package:dackservice/screens/order_overview.dart';
+import 'package:dackservice/providers/session.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../globals.dart' as global;
 import '../screens/order_overview.dart';
+import '../utilities.dart';
+
+import '../widgets/radio_row.dart';
+import '../widgets/input_filter_row.dart';
 
 class FilterDrawer extends StatefulWidget {
   const FilterDrawer({Key? key}) : super(key: key);
@@ -14,71 +20,153 @@ class _FilterDrawerState extends State<FilterDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Container(
+      child: Padding(
         padding:
-            const EdgeInsets.only(top: 40.0, left: 10, right: 10, bottom: 8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('день или все'),
-            Text('один станок или все видимые'),
-            Text('поиск по номеру заказа'),
-            Text('поиск по наименованию'),
-            Text('поиск по номеру заказа 1C'),
-
-            //** кнопки
-            Row(
+        const EdgeInsets.only(left: 8.0, right: 8, bottom: 10, top: 30),
+        child: Container(
+          //color: Colors.red,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            // await filterProvider.readFilterData().then(
-                            //         (value) =>
-                            //         Navigator.of(context).pushNamed('/'));
-                            Navigator.of(context).pushNamed(OrderOverview.routeName);
-                          },
-                          child: const Icon(Icons.arrow_back)),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InputRow(
+                            initValue: global.fltOrdNum,
+                            label: 'номер заказа',
+                            gap: 70,
+                            onChanged: (String value) {
+                              print('in onChanged before ${global.fltOrdNum}');
+                              global.fltOrdNum = value;
+                              print('in onChanged after ${global.fltOrdNum}');
+                            },
+                            onClear: () {
+                              global.fltOrdNum = '';
+                            },
+
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+
+                          InputRow(
+                            initValue: global.fltOrdPerson,
+                            label: 'наименование',
+                            gap: 20,
+                            onChanged: (String value) {
+                              global.fltOrdPerson = value;
+                            },
+                            onClear: () {
+                              global.fltOrdPerson = '';
+                            },),
+                          const SizedBox(
+                            height: 4,
+                          ),
+
+                          InputRow(
+                            initValue: global.fltOrdNum1C,
+                            label: 'номер заказа 1С',
+                            gap: 50,
+                            onChanged: (String value) {
+                              global.fltOrdNum1C = value;
+                            },
+                            onClear: () {
+                              global.fltOrdNum1C = '';
+                            },),
+                          const SizedBox(
+                            height: 12,
+                          ),
+
+
+                          Container(
+                              decoration: API.kBoxDecoration(),
+                              width: double.infinity,
+                              padding: EdgeInsets.all(8),
+                              //padding: EdgeInsets.only(top: 8),
+                              child: RadioRowDate()),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Container(
+                            decoration: API.kBoxDecoration(),
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(8),
+                            child: RadioRowMachine(),
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          // Container(
+                          //   decoration: API.kBoxDecoration(),
+                          //   width: double.infinity,
+                          //   padding: EdgeInsets.all(8),
+                          //   child: InputRow(initValue : global.fltOrdNum),
+                          // ),
+
+                        ],
+                      ),
                     )),
-                Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            // filterProvider.clearFilter();
-                            // genres.setCheckedValue('');
-                            // filterProvider.saveFilterData().then((value) =>
-                            //     Navigator.of(context).pushNamed('/'));
-                          },
-                          child: const Text('сброс')),
-                    )),
-                Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            // filter.fltSeries = '';
-                            // filter.fltGenres = genres.codeCheckString;
-                            // widget.pressDone();
-                            // filterProvider.saveFilterData().then((value) =>
-                            //     Navigator.of(context).pushNamed('/'));
-                          },
-                          child: const Text('готово')),
-                    )),
+                SizedBox(
+                  height: 50,
+                  //color: Colors.green,
+                  child: // //** кнопки
+                  Row(
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 2.0),
+                            child: ElevatedButton(
+                                onPressed: () async {
+                                  // await filterProvider.readFilterData().then(
+                                  //         (value) =>
+                                  //         Navigator.of(context).pushNamed('/'));
+                                  Navigator.of(context)
+                                      .pushNamed(OrderOverview.routeName);
+                                },
+                                child: const Icon(Icons.arrow_back)),
+                          )),
+                      Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4.0),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Provider.of<Session>(context, listen: false)
+                                      .setDefaultFilter();
+                                  Navigator.of(context).pushNamed(
+                                      OrderOverview.routeName);
+                                },
+                                child: const Text('сброс')),
+                          )),
+                      Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4.0),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Provider.of<Session>(context, listen: false)
+                                      .saveCurrentFilter();
+                                  Navigator.of(context).pushNamed(
+                                      OrderOverview.routeName);
+                                },
+                                child: const Text('готово')),
+                          )),
+                    ],
+                  )
+// //***закончились кнопки
+                  ,
+                ),
               ],
-            )
-
-
-          ],
-
-
-        ),
+            )),
       ),
     );
   }
 }
+
+

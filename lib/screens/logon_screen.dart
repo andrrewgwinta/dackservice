@@ -83,7 +83,7 @@ class _LogonWidgetState extends State<LogonWidget> {
   }
 
   void choiceMachinesClick() {
-    API.choiseMachineDialog(context, onClickMch);
+      API.choiseMachineDialog(context, ChoiseType.ctMachine, false, onClickMch);
   }
 
   void choiceUsersClick() {
@@ -109,9 +109,11 @@ class _LogonWidgetState extends State<LogonWidget> {
 
   @override
   Widget build(BuildContext context) {
+    //print('in build logon  ${global.machineId} ${global.userId}');
     bool _emptyUser = (global.userName.trim() == '');
     bool _emptyMachine = (global.machineName.trim() == '');
-    print('in build logon  ${global.machineId} ${global.userId}');
+    //print ('_emptyMachine ${_emptyMachine.toString()}');
+
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -157,7 +159,7 @@ class _LogonWidgetState extends State<LogonWidget> {
                             _emptyMachine ? 'выберите станок...' : global.machineName,
                             style: TextStyle(
                                 fontSize: 20,
-                                color: _emptyUser ? Colors.white : kFieldText ),
+                                color: _emptyMachine ? Colors.white : kFieldText ),
                           ),
                         ),
 
@@ -171,7 +173,7 @@ class _LogonWidgetState extends State<LogonWidget> {
                   icon: const Icon(
                     Icons.arrow_forward,
                     size: 30,
-                    color: kFieldBorder,
+                    color: kFieldLabelText,
                   ),
                 ),
               ],
@@ -218,7 +220,7 @@ class _LogonWidgetState extends State<LogonWidget> {
                   icon: const Icon(
                     Icons.arrow_forward,
                     size: 30,
-                    color: kFieldBorder,
+                    color: kFieldLabelText,
                   ),
                 ),
               ],

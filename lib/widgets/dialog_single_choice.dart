@@ -1,45 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../globals.dart' as global;
 import '../providers/machines.dart';
 import '../providers/users.dart';
 import '../utilities.dart';
-import '../globals.dart' as global;
 
 class DialogSingleChoise extends StatelessWidget {
   String value;
   final void Function(String) pressOK;
-  final ChoiceType choiseType;
+  final ChoiseType choiseType;
+  final bool twicePop;
 
   DialogSingleChoise(
-      {required this.choiseType, required this.value, required this.pressOK});
+      {Key? key,
+      required this.choiseType,
+      required this.value,
+      required this.twicePop,
+      required this.pressOK})
+      : super(key: key);
 
   void doChoise(String val) {
-    print('in doChoise $val');
+    //print('in doChoise $val');
     value = val;
   }
 
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: Text(choiseType == ChoiceType.ctMachine
+      title: Text(choiseType == ChoiseType.ctMachine
           ? 'станки'
-          : choiseType == ChoiceType.ctUser
+          : choiseType == ChoiseType.ctUser
               ? 'пользователи'
-              : ''),
+              : choiseType == ChoiseType.ctMachineByUser
+                  ? 'станки для "${global.userName}"'
+                  : ''),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
       children: [
-        Container(
+        SizedBox(
           width: 300,
           height: 350,
           // MediaQuery.of(context).size.height -
           //     250,
           child: RadioList(
-            items: (choiseType == ChoiceType.ctMachine)
-                ? Provider.of<Machines>(context, listen: false).getListNsi()
-                : (choiseType == ChoiceType.ctUser)
+            items: (choiseType == ChoiseType.ctMachine)
+                ? Provider.of<Machines>(context, listen: false).getMachinesDistinct()
+                : (choiseType == ChoiseType.ctUser)
                     ? Provider.of<Users>(context, listen: false)
-                        .getListNsi(global.machineId)
-                    : [],
+                        .getListUserByMachine(global.machineId)
+                    : (choiseType == ChoiseType.ctMachineByUser)
+                        ? Provider.of<Machines>(context, listen: false).getMachinesByUser(global.userId)
+                        : [],
             init: value,
             onChange: doChoise,
           ),
@@ -66,6 +78,9 @@ class DialogSingleChoise extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   pressOK(value);
+                  if (twicePop) {
+                    Navigator.of(context).pop();
+                  }
                   Navigator.of(context).pop();
                 },
                 child: const Text('запомнить'),

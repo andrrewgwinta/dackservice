@@ -38,7 +38,7 @@ class Users with ChangeNotifier {
   Future<void> doLogin(String password) async {
     final url =
     Uri.parse('${API.prefixURL}do_login.php?id=${global.userId}&gs=$password');
-    print(url);
+    //print(url);
     try {
 
       final response = await http.post(url);
@@ -59,7 +59,7 @@ class Users with ChangeNotifier {
   }
 
 
-  List<NsiRecord> getListNsi(String machineId) {
+  List<NsiRecord> getListUserByMachine(String machineId) {
     List<NsiRecord> result = [];
     for (var data in _items)  {
       if (data.machineId == machineId) {
@@ -76,9 +76,9 @@ class Users with ChangeNotifier {
     try {
       final response = await http.get(url, );
       if (response.statusCode == 200) {
-        final List<dynamic> userJson = json.decode(response.body);
+        final List<dynamic> loadJson = json.decode(response.body);
         final _loadedInformation =
-        userJson.map((json) => User.fromJson(json)).toList();
+        loadJson.map((json) => User.fromJson(json)).toList();
         _items = _loadedInformation;
       }
     } catch (error) {

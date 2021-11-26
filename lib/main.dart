@@ -5,6 +5,10 @@ import './helpers/custom_route.dart';
 import './providers/session.dart';
 import './providers/machines.dart';
 import './providers/users.dart';
+import './providers/ordservice.dart';
+import './providers/ordarticle.dart';
+import './providers/staff.dart';
+
 
 
 import './screens/launch_screen.dart';
@@ -38,6 +42,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (ctx) => Session()),
         ChangeNotifierProvider(create: (ctx) => Machines()),
         ChangeNotifierProvider(create: (ctx) => Users()),
+        ChangeNotifierProvider(create: (ctx) => OrdServices()),
+        ChangeNotifierProvider(create: (ctx) => OrdArticles()),
+        ChangeNotifierProvider(create: (ctx) => Staff()),
       ],
       child: Consumer<Session>(
         builder: (ctx, auth, _) =>

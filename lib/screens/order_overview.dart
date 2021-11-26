@@ -1,15 +1,19 @@
-import 'package:dackservice/providers/machines.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../globals.dart' as global;
+import '../providers/machines.dart';
+import '../providers/ordservice.dart';
 import '../providers/session.dart';
 import '../screens/logon_screen.dart';
 import '../screens/setting_screen.dart';
 import '../utilities.dart';
 import '../widgets/filter_drawer.dart';
+import '../widgets/order_card_widget.dart';
+import '../widgets/current_date_widget.dart';
+
 
 class OrderOverview extends StatefulWidget {
   static const routeName = '/orders';
@@ -21,21 +25,26 @@ class OrderOverview extends StatefulWidget {
 }
 
 class _OrderOverviewState extends State<OrderOverview> {
+
   @override
   Widget build(BuildContext context) {
+    print('rebuild main page');
+
     void changeMachine(String value) {
-      global.machineId = value;
-      global.machineName = Provider.of<Machines>(context, listen: false)
-          .getNameById(global.machineId);
-      Provider.of<Session>(context, listen: false).saveCurrentSession();
-      setState(() {});
+      print('in chamge Machine');
+      //TODO
+      setState(() {
+        global.machineId = value;
+        global.machineName = Provider.of<Machines>(context, listen: false)
+            .getNameById(global.machineId);
+        Provider.of<Session>(context, listen: false).saveCurrentSession();
+        Provider.of<OrdServices>(context, listen: false).loadOrdServices();
+      });
     }
 
     void incCurrentDay() {
       setState(() {
-        print('before inc ${DateFormat.yMMMd('ru').format(global.filterDate)}');
         global.filterDate = global.filterDate.add(Duration(days: 1));
-        print('after inc ${DateFormat.yMMMd('ru').format(global.filterDate)}');
       });
     }
 
@@ -55,11 +64,13 @@ class _OrderOverviewState extends State<OrderOverview> {
           PopupMenuButton(
             //tooltip: '',
             child: const Icon(Icons.more_vert),
-            itemBuilder: (_) => [
+            itemBuilder: (_) =>
+            [
               PopupMenuItem(
                 child: TextButton(
                   onPressed: () {
-                    API.choiseMachineDialog(context, changeMachine);
+                     API.choiseMachineDialog(context, ChoiseType.ctMachineByUser, true,  changeMachine);
+                     // Navigator.of(context).pop();
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,7 +169,7 @@ class _OrderOverviewState extends State<OrderOverview> {
               child: CurrentDatePicker(
                   pressLeft: decCurrentDay, pressRight: incCurrentDay),
             ),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             Expanded(child: OrderList()),
           ],
         ),
@@ -167,35 +178,6 @@ class _OrderOverviewState extends State<OrderOverview> {
   }
 }
 
-class CurrentDatePicker extends StatelessWidget {
-  final Function() pressLeft;
-  final Function() pressRight;
-
-  const CurrentDatePicker(
-      {Key? key, required this.pressLeft, required this.pressRight})
-      : super(key: key);
-
-  Widget build(BuildContext context) {
-    print('rebuild CurrentDatePicker');
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        IconButton(
-            onPressed: pressLeft,
-            icon: const Icon(Icons.arrow_left, size: 40, color: kIconColor)),
-        Center(
-            child: Text(
-          DateFormat.yMMMd('ru').format(global.filterDate),
-          style: const TextStyle(fontSize: 24, color: kFieldText),
-        )),
-        IconButton(
-            onPressed: pressRight,
-            icon: const Icon(Icons.arrow_right, size: 40, color: kIconColor)),
-      ],
-    );
-  }
-}
 
 class OrderList extends StatefulWidget {
   const OrderList({Key? key}) : super(key: key);
@@ -207,9 +189,33 @@ class OrderList extends StatefulWidget {
 class _OrderListState extends State<OrderList> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: orders.length,
-      itemBuilder: (ctx, index) => Text(orders[index]),
-    );
+    print('rebuild Order list');
+    return FutureBuilder(
+        future:
+        Provider.of<OrdServices>(context, listen: false).loadOrdServices(),
+        builder: (ctx, dataSnapshot) {
+          if (dataSnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            //return(Text("kdkd"));
+            return Consumer<OrdServices>(
+              builder: (ctx, readData, child) =>
+              readData.items.length == 0
+                  ? const Center(
+                  child: Text(
+                    'таких записей нет',
+                    style: TextStyle(fontSize: 30, color: kFieldText),
+                  ))
+                  : ListView.builder(
+                itemCount: readData.items.length,
+                itemBuilder: (ctx, index) =>
+                    OrderCard(service: readData.items[index]),
+              ),
+            );
+          }
+        });
   }
 }
+
