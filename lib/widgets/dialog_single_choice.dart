@@ -35,8 +35,9 @@ class DialogSingleChoise extends StatelessWidget {
               : choiseType == ChoiseType.ctMachineByUser
                   ? 'станки для "${global.userName}"'
                   : ''),
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      backgroundColor : kDialogBackGround,
+      shape: kShapeBorder,
+      elevation: kDialogElevation,
       children: [
         SizedBox(
           width: 300,

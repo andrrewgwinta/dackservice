@@ -104,7 +104,7 @@ class _OrderCardState extends State<OrderCard> {
                                     ? '${DateFormat.yMMMd('ru').format(
                                     widget.service.datePlan)} ${widget.service
                                     .machineName}'
-                                    : widget.service.workersIdString,
+                                    : widget.service.atypeName,
                                 style: TextStyle(
                                     color: isAnother ? Colors.blue : Colors
                                         .black,

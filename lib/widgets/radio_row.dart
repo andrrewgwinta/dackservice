@@ -25,18 +25,24 @@ class _RadioRowDateState extends State<RadioRowDate> {
   Widget build(BuildContext context) {
     return SizedBox(
       //color: Colors.yellow,
-      height: 120,
+      height: 180,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           RadioListTile<FilterDateType>(
-            title: const Text('текущий день'),
-            value: FilterDateType.fdtOneDay,
+            title: const Text('текущий день не выполненные'),
+            value: FilterDateType.fdtOneDayNoDone,
             groupValue: widget.selectedValue,
             onChanged: onRadioClick,
           ),
           RadioListTile<FilterDateType>(
-            title: const Text('все не выполненные'),
+            title: const Text('текущий день все'),
+            value: FilterDateType.fdtOneDayAll,
+            groupValue: widget.selectedValue,
+            onChanged: onRadioClick,
+          ),
+          RadioListTile<FilterDateType>(
+            title: const Text('ВСЕ не выполненные'),
             value: FilterDateType.fdtAllNoDone,
             groupValue: widget.selectedValue,
             onChanged: onRadioClick,

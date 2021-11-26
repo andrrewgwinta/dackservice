@@ -15,7 +15,7 @@ String machineName ='';
 
 //filter information
 DateTime filterDate = DateTime.now();
-FilterDateType fltDateType = FilterDateType.fdtOneDay;
+FilterDateType fltDateType = FilterDateType.fdtOneDayNoDone;
 String fltOrdNum='';
 String fltOrdPerson='';
 String fltOrdNum1C='';

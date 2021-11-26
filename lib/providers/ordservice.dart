@@ -99,7 +99,7 @@ class OrdServices with ChangeNotifier {
     final Map<String, dynamic> queryParam = API.filterToJson;
     final String queryString = Uri(queryParameters: queryParam).query;
     final url = Uri.parse('${API.prefixURL}get_ordservises.php?$queryString');
-    print(url);
+    //print(url);
     try {
       final response = await http.get(
         url,

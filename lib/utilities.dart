@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import './globals.dart' as global;
-import '../providers/machines.dart';
-import '../providers/session.dart';
-import '../providers/users.dart';
 import '../widgets/dialog_single_choice.dart';
 
 const kDackGray = Color.fromRGBO(154, 152, 162, 1);
@@ -15,16 +11,22 @@ const kDackGreen3 = Color.fromRGBO(150, 190, 69, 1);
 const kDackGreenLight = Color.fromRGBO(174, 208, 110, 1);
 
 const kFieldBackGroud = Color(0xFFcfcfcf);
+const kDialogBackGround = Color(0xFFddddff);
 const kFieldBorder = Color(0xFF9999ff);
 const kFieldText = Color(0xFF3333ff);
 //const kFieldLabelText = Color(0xFF8080ff);
 const kFieldLabelText = Color(0xFF0000ff);
 const kIconColor = Color(0xFF0000b3);
 const kShapeBorder = RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(10.0)));
+    side: BorderSide(color:Colors.blueGrey, width: 1),
+    borderRadius: BorderRadius.all(Radius.circular(15.0)));
+const kDialogElevation = 24.0;
 
-enum
-FilterDateType {fdtOneDay,fdtAllNoDone,}
+enum FilterDateType {
+  fdtOneDayNoDone,
+  fdtOneDayAll,
+  fdtAllNoDone,
+}
 
 enum FilterMachineType {
   fmtOnlyCurrent,
@@ -34,15 +36,13 @@ enum FilterMachineType {
 enum ChoiseType {
   ctMachine,
   ctUser,
-  ctMachineByUser
+  ctMachineByUser,
 }
-
 
 class API {
   API() : super();
 
-  static Map<String, dynamic> get filterToJson =>
-      {
+  static Map<String, dynamic> get filterToJson => {
         'fltOrdNum': global.fltOrdNum,
         'fltOrdPerson': global.fltOrdPerson,
         'fltOrdNum1c': global.fltOrdNum1C,
@@ -60,14 +60,13 @@ class API {
       return 'http://${global.serverName}/dack/';
     }
   }
-  static BoxDecoration kOrdArticleDecoration (){
+
+  static BoxDecoration kOrdArticleDecoration() {
     return BoxDecoration(
         border: Border.all(color: kFieldBorder, width: 1),
         color: kFieldBackGroud,
         borderRadius: BorderRadius.circular(10));
   }
-
-
 
   static BoxDecoration kBoxDecoration() {
     return BoxDecoration(
@@ -85,14 +84,13 @@ class API {
       enabledBorder: InputBorder.none,
       errorBorder: InputBorder.none,
       disabledBorder: InputBorder.none,
-      contentPadding: const EdgeInsets.only(
-          left: 15, bottom: 11, top: 11, right: 15),
+      contentPadding:
+          const EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
     );
   }
 
-  static choiseMachineDialog (BuildContext context, ChoiseType ct,
-      bool twicePop,
-      Function(String) clickOK)  {
+  static choiseMachineDialog(BuildContext context, ChoiseType ct, bool twicePop,
+      Function(String) clickOK) {
     showDialog(
       context: context,
       builder: (context) {
@@ -110,21 +108,22 @@ class API {
     if (global.machineId == '') {
       showDialog(
         context: context,
-        builder: (_) =>
-            AlertDialog(
-              title: const Text('А станок?'),
-              content: const Text('Сначала необходимо выбрать станок'),
-              actions: [
-                ElevatedButton(child: const Text('OK'), onPressed: () {
-                  Navigator.of(context).pop();
-                },),
-              ],
-              elevation: 24.0,
-              //backgroundColor: Colors.blue,
-              shape: kShapeBorder,
-            ),);
-    }
-    else {
+        builder: (_) => AlertDialog(
+          title: const Text('А станок?'),
+          content: const Text('Сначала необходимо выбрать станок'),
+          actions: [
+            ElevatedButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          elevation: kDialogElevation,
+          shape: kShapeBorder,
+        ),
+      );
+    } else {
       showDialog(
         context: context,
         builder: (context) {
@@ -171,7 +170,7 @@ class NsiRecord {
   late int npp;
   bool checked;
 
-  NsiRecord({this.id = '', this.name = '', this.npp=0, this.checked = false});
+  NsiRecord({this.id = '', this.name = '', this.npp = 0, this.checked = false});
 
   @override
   String toString() {
@@ -185,4 +184,3 @@ class NsiRecord {
     );
   }
 }
-

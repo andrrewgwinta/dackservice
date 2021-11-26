@@ -22,7 +22,7 @@ class _FilterDrawerState extends State<FilterDrawer> {
     return Drawer(
       child: Padding(
         padding:
-        const EdgeInsets.only(left: 8.0, right: 8, bottom: 10, top: 30),
+        const EdgeInsets.only(left: 8.0, right: 8, bottom: 10, top: 40),
         child: Container(
           //color: Colors.red,
             child: Column(
@@ -38,9 +38,7 @@ class _FilterDrawerState extends State<FilterDrawer> {
                             label: 'номер заказа',
                             gap: 70,
                             onChanged: (String value) {
-                              print('in onChanged before ${global.fltOrdNum}');
                               global.fltOrdNum = value;
-                              print('in onChanged after ${global.fltOrdNum}');
                             },
                             onClear: () {
                               global.fltOrdNum = '';

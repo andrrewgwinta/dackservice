@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../globals.dart' as global;
@@ -28,11 +27,8 @@ class _OrderOverviewState extends State<OrderOverview> {
 
   @override
   Widget build(BuildContext context) {
-    print('rebuild main page');
 
     void changeMachine(String value) {
-      print('in chamge Machine');
-      //TODO
       setState(() {
         global.machineId = value;
         global.machineName = Provider.of<Machines>(context, listen: false)
@@ -189,7 +185,7 @@ class OrderList extends StatefulWidget {
 class _OrderListState extends State<OrderList> {
   @override
   Widget build(BuildContext context) {
-    print('rebuild Order list');
+
     return FutureBuilder(
         future:
         Provider.of<OrdServices>(context, listen: false).loadOrdServices(),

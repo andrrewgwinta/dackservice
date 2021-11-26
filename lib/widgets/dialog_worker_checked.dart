@@ -36,11 +36,11 @@ class DialogWorkerChecked extends StatelessWidget {
      final workers = Provider.of<Staff>(context, listen: false)
          .getWorkersList(service.machineId, service.workersIdString);
      codeString = (service.workersIdString=='')?'^^':service.workersIdString;
-     print('codeString $codeString');
-    // print(
-    //     'service.machineId=${service.machineId} service.workersIdString=${service.workersIdString}');
+
+     //print('codeString $codeString');
+
     return SimpleDialog(
-      title: //ListTile(title: Text(service.name), subtitle: Text(service.orderName),),
+      title:
           Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,8 +61,9 @@ class DialogWorkerChecked extends StatelessWidget {
           ),
         ],
       ),
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      backgroundColor: kDialogBackGround,
+      shape: kShapeBorder,
+      elevation: kDialogElevation,
       children: [
         SizedBox(
             width: 300,
@@ -120,7 +121,7 @@ class CheckList extends StatefulWidget {
 }
 
 class _CheckListState extends State<CheckList> {
-  String? _choiceResult;
+  //String? _choiceResult;
 
   @override
   void initState() {

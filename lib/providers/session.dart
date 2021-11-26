@@ -52,7 +52,7 @@ class Session with ChangeNotifier {
   }
 
   void setDefaultFilter() {
-    global.fltDateType = FilterDateType.fdtOneDay;
+    global.fltDateType = FilterDateType.fdtOneDayNoDone;
     global.fltOrdNum = '';
     global.fltOrdPerson = '';
     global.fltOrdNum1C = '';
